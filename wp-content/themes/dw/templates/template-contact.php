@@ -1,4 +1,4 @@
-<?php /* Template Name: Page "À propos" */ ?>
+<?php /* Template Name: Page "Contact" */ ?>
 
 <?php get_header(); ?>
 
