@@ -45,3 +45,12 @@ register_post_type('travel', [
     'rewrite' => ['slug' => 'voyages',],
     'supports' => ['title', 'excerpt', 'editor', 'thumbnail'],
 ]);
+
+
+// Paramètres des tailles d'images pour le générateur de thumbnails de wordpress
+
+// sans recadrage:
+add_image_size('travel-side', 420, 420);
+
+// avec recadrage:
+add_image_size('travel-header', 1920, 400, true);
