@@ -1,6 +1,15 @@
 <?php get_header(); ?>
 
     <style type="text/css">
+        .sro {
+            position: absolute;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            height: 1px; width: 1px;
+            margin: -1px;
+            padding: 0;
+            border: 0;
+        }
         .travel {
         }
         .travel__header {
@@ -73,6 +82,42 @@
             height: 100%;
             object-fit: cover;
         }
+        .travel__rating {
+            width: 150px;
+            height: 30px;
+            display: block;
+            position: relative;
+            background: url(/wp-content/themes/dw/ressources/img/star_empty.svg);
+            background-repeat: repeat-x;
+            background-position: 0 0;
+        }
+        .travel__rating:after {
+            content:'';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            background: url(/wp-content/themes/dw/ressources/img/star_filled.svg);
+            background-repeat: repeat-x;
+            background-position: 0 0;
+        }
+        .travel__rating[data-score="1"]:after {
+            width: 30px;
+        }
+        .travel__rating[data-score="2"]:after {
+            width: 60px;
+        }
+        .travel__rating[data-score="3"]:after {
+            width: 90px;
+        }
+        .travel__rating[data-score="4"]:after {
+            width: 120px;
+        }
+        .travel__rating[data-score="5"]:after {
+            width: 100%;
+        }
     </style>
 
 <?php
@@ -84,6 +129,9 @@ if(have_posts()): while(have_posts()): the_post(); ?>
             <div class="travel__head">
                 <h2 class="travel__title"><?= get_the_title(); ?></h2>
                 <p class="travel__excerpt"><?= get_the_excerpt(); ?></p>
+                <div class="travel__rating" data-score="<?= get_field('rating'); ?>">
+                    <p class="sro">Ce voyage obtient l'appréciation de <?= get_field('rating'); ?> étoiles sur 5</p>
+                </div>
             </div>
             <figure class="travel__back">
                 <?= get_the_post_thumbnail(size: 'travel-header', attr: ['class' => 'travel__cover']); ?>
