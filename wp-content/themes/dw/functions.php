@@ -1,4 +1,5 @@
 <?php
+
 // Charger les champs ACF exportés :
 include_once('fields.php');
 
@@ -7,21 +8,21 @@ include_once('fields.php');
 // allons créer. On va donc le désactiver :
 
 // Disable Gutenberg on the back end.
-add_filter('use_block_editor_for_post', '__return_false');
+add_filter( 'use_block_editor_for_post', '__return_false' );
 // Disable Gutenberg for widgets.
-add_filter('use_widgets_block_editor', '__return_false');
+add_filter( 'use_widgets_block_editor', '__return_false' );
 // Disable default front-end styles.
-add_action('wp_enqueue_scripts', function () {
+add_action( 'wp_enqueue_scripts', function() {
     // Remove CSS on the front end.
-    wp_dequeue_style('wp-block-library');
+    wp_dequeue_style( 'wp-block-library' );
     // Remove Gutenberg theme.
-    wp_dequeue_style('wp-block-library-theme');
+    wp_dequeue_style( 'wp-block-library-theme' );
     // Remove inline global CSS on the front end.
-    wp_dequeue_style('global-styles');
-}, 20);
+    wp_dequeue_style( 'global-styles' );
+}, 20 );
 
 // Activer l'utilisation des vignettes (image de couverture) sur nos post types:
-add_theme_support('post-thumbnails', ['recipe', 'travel']);
+add_theme_support('post-thumbnails', ['recipe','travel']);
 
 // Enregistrer de nouveaux "types de contenu", qui seront stockés dans la table
 // "wp_posts", avec un identifiant de type spécifique dans la colonne "post_type":
@@ -36,7 +37,7 @@ register_post_type('recipe', [
     'rewrite' => [
         'slug' => 'recettes',
     ],
-    'supports' => ['title', 'excerpt', 'editor', 'thumbnail'],
+    'supports' => ['title','excerpt','editor','thumbnail'],
 ]);
 
 register_post_type('travel', [
@@ -49,7 +50,7 @@ register_post_type('travel', [
     'rewrite' => [
         'slug' => 'voyages',
     ],
-    'supports' => ['title', 'excerpt', 'editor', 'thumbnail'],
+    'supports' => ['title','excerpt','editor','thumbnail'],
 ]);
 
 // Paramétrer des tailles d'images pour le générateur de thumbnails de Wordpress :
@@ -59,12 +60,10 @@ add_image_size('travel-side', 420, 420);
 // Avec recadrage :
 add_image_size('travel-header', 1920, 400, true);
 
+// Enregistrer les menus de navigation en fonction de l'endroit où ils sont exploités :
 
-// Enregistrer les menus de navigation en foncuton de l'endroit où ils sont exploités :
-
-
-register_nav_menu( 'header', 'Le menu de navigation principal en haut de la page.' );
-register_nav_menu( 'footer', 'Le menu de navigation principal de fin de page.' );
+register_nav_menu('header', 'Le menu de navigation principal en haut de la page.');
+register_nav_menu('footer', 'Le menu de navigation de fin de page.');
 
 // Créer une nouvelle fonction qui permet de retourner un menu de navigation formaté en un
 // tableau d'objets afin de pouvoir l'afficher à notre guise dans le template.
@@ -74,14 +73,14 @@ function dw_get_navigation_links(string $location): array
     // Récupérer l'objet WP pour le menu à la location $location
     $locations = get_nav_menu_locations();
 
-    if (! isset($locations[$location])) {
+    if(! isset($locations[$location])) {
         return [];
     }
 
     $nav_id = $locations[$location];
     $nav = wp_get_nav_menu_items($nav_id);
 
-    // Transformer le menu en un tableau de liens, chaque lien étant un objet  personnnalisé
+    // Transformer le menu en un tableau de liens, chaque lien étant un objet personnalisé
 
     $links = [];
 
@@ -89,11 +88,12 @@ function dw_get_navigation_links(string $location): array
         $link = new stdClass();
         $link->href = $post->url;
         $link->label = $post->title;
+        $link->icon = get_field('icon', $post);
+
+        $links[] = $link;
     }
 
-    $links[] = $link; //array_push($links, $link); c'est la version longue
-
     // Retourner ce tableau d'objets (liens).
-    return $links;
 
+    return $links;
 }
